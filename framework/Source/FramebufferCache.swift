@@ -29,12 +29,14 @@ public class FramebufferCache {
 //            print("Restoring previous framebuffer")
             framebuffer = framebufferCache[hash]!.removeLast()
             framebuffer.orientation = orientation
+            framebuffer.returned = false
         } else {
             do {
                 debugPrint("Generating new framebuffer at size: \(size)")
 
                 framebuffer = try Framebuffer(context:context, orientation:orientation, size:size, textureOnly:textureOnly, minFilter:minFilter, magFilter:magFilter, wrapS:wrapS, wrapT:wrapT, internalFormat:internalFormat, format:format, type:type, stencil:stencil)
                 framebuffer.cache = self
+                framebuffer.returned = false
             } catch {
                 fatalError("Could not create a framebuffer of the size (\(size.width), \(size.height)), error: \(error)")
             }
@@ -49,6 +51,7 @@ public class FramebufferCache {
     func returnToCache(_ framebuffer:Framebuffer) {
 //        print("Returning to cache: \(framebuffer)")
         context.runOperationSynchronously{
+            framebuffer.returned = true
             if (self.framebufferCache[framebuffer.hash] != nil) {
                 self.framebufferCache[framebuffer.hash]!.append(framebuffer)
             } else {

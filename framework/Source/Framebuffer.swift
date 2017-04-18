@@ -46,6 +46,8 @@ public class Framebuffer {
     public var timingStyle:FramebufferTimingStyle = .stillImage
     public var orientation:ImageOrientation
 
+    var returned : Bool = false
+
     let texture:GLuint
     let framebuffer:GLuint?
     let stencilBuffer:GLuint?
@@ -161,6 +163,10 @@ public class Framebuffer {
     var framebufferRetainCount = 0
     func lock() {
         framebufferRetainCount += 1
+
+        if returned {
+            print("WARNING: Tried to lock a returned buffer.")
+        }
     }
 
     func resetRetainCount() {
@@ -169,6 +175,9 @@ public class Framebuffer {
     
     func unlock() {
         framebufferRetainCount -= 1
+        if returned {
+            print("WARNING: Tried to unlock a returned buffer.")
+        }
         if (framebufferRetainCount < 1) {
             if ((framebufferRetainCount < 0) && (cache != nil)) {
                 print("WARNING: Tried to overrelease a framebuffer")
