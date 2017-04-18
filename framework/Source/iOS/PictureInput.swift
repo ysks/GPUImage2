@@ -91,9 +91,14 @@ public class PictureInput: ImageSource {
         }
         
         sharedImageProcessingContext.runOperationSynchronously{
+            if self.imageFramebuffer != nil {
+                self.imageFramebuffer.unlock()
+            }
+
             do {
                 // TODO: Alter orientation based on metadata from photo
                 self.imageFramebuffer = try Framebuffer(context:sharedImageProcessingContext, orientation:orientation, size:GLSize(width:widthToUseForTexture, height:heightToUseForTexture), textureOnly:true)
+                self.imageFramebuffer.lock()
             } catch {
                 fatalError("ERROR: Unable to initialize framebuffer of size (\(widthToUseForTexture), \(heightToUseForTexture)) with error: \(error)")
             }
