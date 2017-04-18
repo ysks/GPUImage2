@@ -32,8 +32,8 @@ public class OpenGLContext: SerialDispatch {
     init() {
         serialDispatchQueue.setSpecific(key:dispatchQueueKey, value:81)
         
-        guard let generatedContext = EAGLContext(api:.openGLES2, sharegroup:imageProcessingShareGroup) else {
-            fatalError("Unable to create an OpenGL ES 2.0 context. The GPUImage framework requires OpenGL ES 2.0 support to work.")
+        guard let generatedContext = EAGLContext(api:.openGLES3, sharegroup:imageProcessingShareGroup) else {
+            fatalError("Unable to create an OpenGL ES 3.0 context. The GPUImage framework requires OpenGL ES 3.0 support to work.")
         }
         
         self.context = generatedContext
