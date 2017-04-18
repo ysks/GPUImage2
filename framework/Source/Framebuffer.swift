@@ -161,7 +161,7 @@ public class Framebuffer {
 
     weak var cache:FramebufferCache?
     var framebufferRetainCount = 0
-    func lock() {
+    public func lock() {
         framebufferRetainCount += 1
 
         if returned {
